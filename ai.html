@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surfer Jump - Working Score</title>
+    <style>
+        * { padding: 0; margin: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: #e0f2fe;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            color: #0369a1;
+            overflow: hidden;
+        }
+
+        #game-container {
+            width: 600px;
+            height: 200px;
+            background: linear-gradient(to bottom, #7dd3fc, #0ea5e9);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 8px solid #0c4a6e;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        #surfer {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            bottom: 0;
+            left: 50px;
+            font-size: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #wave {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            bottom: 0;
+            right: -50px;
+            font-size: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .jump-anim {
+            animation: jump 0.6s ease-out;
+        }
+
+        .wave-anim {
+            animation: move-wave 1.5s infinite linear;
+        }
+
+        @keyframes jump {
+            0% { bottom: 0; }
+            50% { bottom: 130px; }
+            100% { bottom: 0; }
+        }
+
+        @keyframes move-wave {
+            0% { right: -50px; }
+            100% { right: 100%; }
+        }
+
+        .stats { font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; }
+        #high-score-wrap { color: #f59e0b; margin-left: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="stats">
+        <span>Score: <span id="score">0</span></span>
+        <span id="high-score-wrap">Best: <span id="high-score">0</span></span>
+    </div>
+
+    <div id="game-container" onclick="jump()">
+        <div id="surfer">🏄</div>
+        <div id="wave" class="wave-anim">🌊</div>
+    </div>
+
+    <p style="margin-top: 20px;">Press <b>Spacebar</b> or <b>Click</b> to Jump</p>
+
+    <script>
+        const surfer = document.getElementById("surfer");
+        const wave = document.getElementById("wave");
+        const scoreDisplay = document.getElementById("score");
+        const highScoreDisplay = document.getElementById("high-score");
+
+        let score = 0;
+        let isDead = false;
+        let hasScoredForThisWave = false; // Prevents getting multiple points for one wave
+
+        // Load high score from local storage
+        let highScore = localStorage.getItem("surfHigh") || 0;
+        highScoreDisplay.innerText = highScore;
+
+        function jump() {
+            if (isDead) return;
+            if (!surfer.classList.contains("jump-anim")) {
+                surfer.classList.add("jump-anim");
+                setTimeout(() => surfer.classList.remove("jump-anim"), 600);
+            }
+        }
+
+        // Spacebar listener
+        document.addEventListener("keydown", function(event) {
+            if (event.code === "Space" || event.key === " ") {
+                event.preventDefault();
+                jump();
+            }
+        });
+
+        // Main game loop
+        const checkHit = setInterval(() => {
+            if (isDead) return;
+
+            let sBottom = parseInt(window.getComputedStyle(surfer).getPropertyValue("bottom"));
+            let wLeft = parseInt(window.getComputedStyle(wave).getPropertyValue("left"));
+
+            // Collision Detection
+            if (wLeft > 50 && wLeft < 90 && sBottom < 40) {
+                isDead = true;
+                wave.style.animation = "none";
+                
+                // Save high score
+                if (score > highScore) {
+                    localStorage.setItem("surfHigh", score);
+                }
+
+                alert("Wipeout! Final Score: " + score);
+                location.reload(); 
+            } else {
+                // Scoring Logic
+                // If wave passes the surfer (left 50) and we haven't scored yet
+                if (wLeft < 50 && !hasScoredForThisWave) {
+                    score += 10;
+                    scoreDisplay.innerText = score;
+                    hasScoredForThisWave = true;
+                }
+
+                // Reset the scoring flag when the wave resets to the right side
+                if (wLeft > 400) {
+                    hasScoredForThisWave = false;
+                }
+            }
+        }, 10);
+    </script>
+</body>
+</html>

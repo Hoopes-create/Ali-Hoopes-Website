@@ -1,0 +1,82 @@
+body{
+    
+}
+
+.header{
+    background-color:cadetblue;
+    color: white;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+}
+
+.mainbody{
+    background-color: whitesmoke;
+    background-color: rgba(215, 248, 255, 0.884);
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-align: center;
+    border: 5px solid rgb(1, 106, 113);
+    margin: 50px;
+    padding: 50px;
+    padding-top: 25px;
+    color: #046a6a;
+}
+
+.mainbody ol {
+    text-align: left;
+}
+
+img{
+    display:block;
+    width:35%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.footer{
+    background-color: cadetblue;
+    color: white;
+    height: 25px;
+    line-height: 25px;
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+}
+
+.common{
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+nav{
+    background-color: lightgray;
+    padding: 10px;
+    overflow:hidden;
+
+}
+
+nav a{
+    color:#333;
+    padding:10px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    float:left;
+}
+
+nav a:hover{
+    background-color: #ccc;
+}
+
+.video-container {
+    width: 100%;            /* Fills the width of the parent element */
+    max-width: 800px;       /* Optional: Prevents the video from getting too large */
+    margin: 0 auto;         /* Centers the video container */
+}
+
+.video-container iframe {
+    width: 100%;            /* Makes the iframe span the full container width */
+    aspect-ratio: 16 / 9;   /* Automatically calculates height based on width */
+    height: auto;           /* Ensures height follows the aspect ratio */
+}
